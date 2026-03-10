@@ -1,4 +1,4 @@
-let embedder;
+let embedder = null;
 
 export async function getEmbedding(text) {
 
@@ -7,19 +7,27 @@ export async function getEmbedding(text) {
     const { pipeline } = await import("@xenova/transformers");
 
     if (!embedder) {
+
+      console.log("Loading embedding model...");
+
       embedder = await pipeline(
         "feature-extraction",
         "Xenova/all-MiniLM-L6-v2"
       );
+
+      console.log("Embedding model loaded");
     }
 
-    const result = await embedder(text);
+    const output = await embedder(text);
 
-    return result.data;
+    // Convert tensor to plain array
+    const embedding = Array.from(output.data);
+
+    return embedding;
 
   } catch (err) {
 
-    console.log("AI embedding unavailable:", err.message);
+    console.error("AI embedding unavailable:", err.message);
 
     return [];
 
