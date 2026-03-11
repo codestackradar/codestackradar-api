@@ -5,7 +5,6 @@ import aiSearchRoute from "./routes/aiSearch.js";
 
 const app = express();
 
-
 app.use(cors());
 app.use(express.json());
 
@@ -13,8 +12,8 @@ app.get("/", (req, res) => {
   res.send("CodeStackRadar API is running 🚀");
 });
 
-app.use("/api/ai-search", aiSearchRoute);
 app.use("/api/search", searchRoute);
+app.use("/api/ai-search", aiSearchRoute);
 
 const PORT = process.env.PORT || 3000;
 
