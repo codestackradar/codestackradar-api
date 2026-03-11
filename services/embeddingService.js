@@ -16,11 +16,11 @@ export async function getEmbedding(text) {
       );
 
       console.log("Embedding model loaded");
+
     }
 
     const output = await embedder(text);
 
-    // Convert tensor to plain array
     const embedding = Array.from(output.data);
 
     return embedding;
