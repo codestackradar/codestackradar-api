@@ -8,26 +8,22 @@ export async function getEmbedding(text) {
 
     if (!embedder) {
 
-      console.log("Loading embedding model...");
+      console.log("Initializing AI model...");
 
       embedder = await pipeline(
         "feature-extraction",
         "Xenova/all-MiniLM-L6-v2"
       );
 
-      console.log("Embedding model loaded");
-
     }
 
-    const output = await embedder(text);
+    const result = await embedder(text);
 
-    const embedding = Array.from(output.data);
-
-    return embedding;
+    return Array.from(result.data);
 
   } catch (err) {
 
-    console.error("AI embedding unavailable:", err.message);
+    console.error("Embedding service unavailable:", err.message);
 
     return [];
 
