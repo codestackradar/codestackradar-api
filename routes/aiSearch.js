@@ -1,26 +1,30 @@
 import express from "express";
-import { getEmbedding } from "../services/embeddingService.js";
+import { cleanError } from "../services/errorParser.js";
+import { searchStackOverflow } from "../services/stackoverflowService.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
 
   try {
 
-    const query = req.query.q || "";
+    const { error } = req.body;
 
-    const embedding = await getEmbedding(query);
+    const cleanedError = cleanError(error);
+
+    const results = await searchStackOverflow(cleanedError);
 
     res.json({
-      success: true,
-      embeddingLength: embedding.length
+      query: cleanedError,
+      results
     });
 
   } catch (err) {
 
-    res.json({
-      success: false,
-      message: "AI service temporarily unavailable"
+    console.error(err);
+
+    res.status(500).json({
+      error: "Search failed"
     });
 
   }
