@@ -5,12 +5,18 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
 
-  const error = req.query.q;
+  const query = req.query.q;
 
-  const embedding = await getEmbedding(error);
+  if (!query) {
+    return res.status(400).json({ error: "Missing query" });
+  }
+
+  const embedding = await getEmbedding(query);
 
   res.json({
-    embeddingLength: embedding.length
+    query,
+    embeddingLength: embedding.length,
+    sample: embedding.slice(0,5)
   });
 
 });
