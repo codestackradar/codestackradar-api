@@ -5,19 +5,25 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
 
-  const query = req.query.q;
+  try {
 
-  if (!query) {
-    return res.status(400).json({ error: "Missing query" });
+    const query = req.query.q || "";
+
+    const embedding = await getEmbedding(query);
+
+    res.json({
+      success: true,
+      embeddingLength: embedding.length
+    });
+
+  } catch (err) {
+
+    res.json({
+      success: false,
+      message: "AI service temporarily unavailable"
+    });
+
   }
-
-  const embedding = await getEmbedding(query);
-
-  res.json({
-    query,
-    embeddingLength: embedding.length,
-    sample: embedding.slice(0,5)
-  });
 
 });
 
